@@ -15,7 +15,10 @@ from db.database import Base, SQLALCHEMY_DATABASE_URL
 from db.models import Categoria
 from db.models import Rol
 from db.models import Noticia
-
+from db.models import Usuario
+from db.models import Articulo
+from db.models import Comentario
+    
 
 
 # this is the Alembic Config object, which provides
