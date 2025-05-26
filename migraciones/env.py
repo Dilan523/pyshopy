@@ -16,7 +16,7 @@ from db.models import Categoria
 from db.models import Rol
 from db.models import Noticia
 from db.models import Usuario
-from db.models import Articulo
+from db.models import Imagen
 from db.models import Comentario
     
 

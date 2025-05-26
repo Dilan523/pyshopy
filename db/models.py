@@ -33,14 +33,16 @@ class Noticia(Base):
                 primary_key=True)
     fecha_creacion = Column(Date)
     estado = Column(Boolean)
-    nombre = Column(String(60))
-    descripcion = Column(String(200))
+    titulo = Column(String(60))
+    introduccion = Column(String(200))
+    contenido = Column(String(2000))
+    imagen = Column(String(200))
     
-    #clave foranea
-    categoria_id = Column(Integer, 
-                        ForeignKey("categorias.id_categoria"))
-    # relación
-    articulos = relationship("Articulo", back_populates="noticia")
+    categoria_id = Column(Integer, ForeignKey("categorias.id_categoria"))
+    
+    imagenes = relationship("Imagen", back_populates="noticia")  # plural y coincide
+    comentarios = relationship("Comentario", back_populates="noticia")
+    categoria = relationship("Categoria", back_populates="noticias")
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -51,33 +53,35 @@ class Usuario(Base):
     correo_usuario = Column(String(60))
     contrasena_usuario = Column(String(60))
 
+    comentarios = relationship("Comentario", back_populates="usuario")
     #clave foranea
     rol_id = Column(Integer, 
                     ForeignKey("roles.id_rol"))
     # Relación con SQLAlchemy para acceso sencillo
     rol = relationship("Rol", back_populates="usuarios")
 
-class Articulo(Base):
-    __tablename__ = "articulos"
-    id_articulo = Column(Integer, primary_key=True)
-    fecha_creacion = Column(Date)
-    estado = Column(Boolean)
-    nombre = Column(String(60))
-    contenido = Column(String(200))
-    #foranea
-    noticia_id = Column(Integer, ForeignKey("noticias.id_noticia"))
-    #relaciones
-    noticia = relationship("Noticia", back_populates="articulos")
-    comentarios = relationship("Comentario", back_populates="articulos")
-
-
 class Comentario(Base):
     __tablename__ = "comentarios"
     id_comentario = Column(Integer, primary_key=True)
     fecha_creacion = Column(Date)
     contenido = Column(String(200))
-
+    
+    usuario = relationship("Usuario", back_populates="comentarios")
     # Clave foránea
-    articulo_id = Column(Integer, ForeignKey("articulos.id_articulo"))
-    # Relación inversa
-    articulo = relationship("Articulo", back_populates="comentarios")
+    noticia_id = Column(Integer,
+                        ForeignKey("noticias.id_noticia"))
+    # clave foránea
+    usuario_id = Column(Integer,
+                        ForeignKey("usuarios.id_usuario"))
+    
+    noticia = relationship("Noticia", back_populates="comentarios")
+    
+class Imagen(Base):
+    __tablename__ = "imagenes"
+    id_imagen = Column(Integer, primary_key=True)
+    fecha_creacion = Column(Date)
+    url = Column(String(200))
+    tipo_archivo = Column(String(10))
+    
+    noticia_id = Column(Integer, ForeignKey("noticias.id_noticia"))  # clave foránea
+    noticia = relationship("Noticia", back_populates="imagenes")
